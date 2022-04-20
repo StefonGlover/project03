@@ -1,12 +1,11 @@
 <?php include("header.php"); ?>
 
 <h2>
-    Move tiles in grid to order them from 1 to 15. To move a tile you can click on it
+    Move tiles in grid to order them from 1 to 15. To move a tile you can click on it.
     <h2>
 
         <div id="centerPuzzleArea">
             <div id="board">
-                <!-- the following are the fifteen puzzle pieces -->
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>
@@ -24,8 +23,8 @@
                 <div>15</div>
             </div>
 
-            <div id="controls">
-                <button id="shufflebutton" class="button">Shuffle</button>
+            <div id="">
+                <button id="shuffleBtn" class="button">Shuffle</button>
             </div>
         </div>
 

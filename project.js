@@ -1,9 +1,8 @@
-"use strict"; //this activates strict mode 
+"use strict"; 
 
-//globally declared variables 
-var gamePiece; 
-var notify;
-var timer;
+var puzzlePiece; 
+var winnerCounter;
+var timeKeeper;
 var spaceY;
 var spaceX;
 
@@ -13,72 +12,69 @@ var spaceX;
 {
 
 	var puzzleArea = document.getElementById('board');
-	gamePiece = puzzleArea.getElementsByTagName('div'); //retrieve element within puzzlearea
+	puzzlePiece = puzzleArea.getElementsByTagName('div'); 
 
-	for (var i=0; i<gamePiece.length; i++) //applies features to each puzzle piece 
+	for (var i=0; i<puzzlePiece.length; i++) 
 
 	{
 
-		gamePiece[i].className = 'puzzlepiece'; //setting up the puzzle piece code
+		puzzlePiece[i].className = 'puzzlepiece'; 
 
-		gamePiece[i].style.left = (i%4*100)+'px'; //calculates the position for puzzle pieces from the left of the screen
+		puzzlePiece[i].style.left = (i%4*100)+'px'; 
 
-		gamePiece[i].style.top = (parseInt(i/4)*100) + 'px'; //calculates the position for puzzle pieces from the top of the screen
+		puzzlePiece[i].style.top = (parseInt(i/4)*100) + 'px'; 
 
-		gamePiece[i].style.backgroundPosition= '-' + gamePiece[i].style.left + ' ' + '-' + gamePiece[i].style.top; 
-		//calculates the position of the background picture so in moves in relation to the puzzle pieces
+		puzzlePiece[i].style.backgroundPosition= '-' + puzzlePiece[i].style.left + ' ' + '-' + puzzlePiece[i].style.top; 
+		
 
 
-		gamePiece[i].onmouseover = function() //aplies features when mouse moves over puzzle pieces
+		puzzlePiece[i].onmouseover = function() 
 
 		{
-			if (checkMove(parseInt(this.innerHTML))) //checks whenever a move is made
+			if (checkMove(parseInt(this.innerHTML))) 
 
 			{
 
-				this.style.border = "3px solid red"; //changes to red when a puzzle piece is near an empty space
+				this.style.border = "3px solid red"; 
 
-				this.style.color = "#006600"; //text color changes to green when a puzzle piece is near an empty space
+				this.style.color = "red"; 
 
-				this.style.textDecoration = "underline"; //underlines the number of the puzzle piece piece
-
-                this.style.backgroundImage="url('https://archive.org/download/luigi_202004/13.jpg')"; 
-                //sets the image for the puzzle's background 
-
+                this.style.backgroundImage="url('luigi.jpeg')"; 
+               
 			}
 
 		};
 
 
-		gamePiece[i].onmouseout = function() //activates whenever mouse moves out of puzzle piece
+		puzzlePiece[i].onmouseout = function() 
 
 		{
 
-			this.style.border = "2px solid black"; //reverts to its original size border 
+			this.style.border = "2px solid black"; 
 
-			this.style.color = "#000000"; //reverts to original text color
+			this.style.color = "#000000"; 
 
-			this.style.textDecoration = "none"; //reverts to original text state
+			this.style.textDecoration = "none"; 
 
 		};
 
 
 
-		gamePiece[i].onclick = function() //activates when mouse clicks on a puzzle piece
+		puzzlePiece[i].onclick = function() 
 
 		{
 
-			if (checkMove(parseInt(this.innerHTML))) //checks whether or not the puzzle piece can move into an empty space
+			if (checkMove(parseInt(this.innerHTML)))
 
 			{
-				swap(this.innerHTML-1); //moves into an empty space if true
+				changePlaces(this.innerHTML-1); 
 
 
-				if (finish()) //checks when the all the 15 pieces are in its right space
+				if (finish()) 
 
 				{
 
-					win(); //alerts the player that they have won the game
+					Won(); 
 
 				}
 
@@ -91,12 +87,12 @@ var spaceX;
 	}
 
 
-	var shuffle = document.getElementById('shufflebutton'); //initializes the shuffle button
+	var shuffle = document.getElementById('shuffleBtn'); 
 
 	spaceX = '300px'; 
 	spaceY = '300px';
 
-	shuffle.onclick = function() //activates whenever the shuffle button is clicked
+	shuffle.onclick = function() 
 
 	{
 
@@ -104,13 +100,13 @@ var spaceX;
 
 		{
 
-			var rand = parseInt(Math.random()* 100) %4; //generates a random number for shuffling each piece
+			var rand = parseInt(Math.random()* 100) %4; 
 
 			if (rand == 0)
 
 			{
 
-				var temp = up(spaceX, spaceY); 
+				var temp = moveUp(spaceX, spaceY); 
 
 				if ( temp != -1)
 
@@ -126,13 +122,13 @@ var spaceX;
 
 			{
 
-				var temp = down(spaceX, spaceY);
+				var temp = moveDown(spaceX, spaceY);
 
 				if ( temp != -1) 
 
 				{
 
-					swap(temp);
+					changePlaces(temp);
 
 				}
 
@@ -144,13 +140,13 @@ var spaceX;
 
 			{
 
-				var temp = left(spaceX, spaceY);
+				var temp = moveLeft(spaceX, spaceY);
 
 				if ( temp != -1)
 
 				{
 
-					swap(temp);
+					changePlaces(temp);
 
 				}
 
@@ -161,13 +157,13 @@ var spaceX;
 
 			{
 
-				var temp = right(spaceX, spaceY);
+				var temp = moveRight(spaceX, spaceY);
 
 				if (temp != -1)
 
 				{
 
-					swap(temp);
+					changePlaces(temp);
 
 				}
 
@@ -181,11 +177,11 @@ var spaceX;
 
 
 
-function checkMove(position) // returns true whenever a piece can be moved into an empty space
+function checkMove(position) 
 
 {
 
-	if (left(spaceX, spaceY) == (position-1))
+	if (moveLeft(spaceX, spaceY) == (position-1))
 
 	{
 
@@ -195,7 +191,7 @@ function checkMove(position) // returns true whenever a piece can be moved into 
 
 
 
-	if (down(spaceX, spaceY) == (position-1))
+	if (moveDown(spaceX, spaceY) == (position-1))
 
 	{
 
@@ -205,7 +201,7 @@ function checkMove(position) // returns true whenever a piece can be moved into 
 
 
 
-	if (up(spaceX, spaceY) == (position-1))
+	if (moveUp(spaceX, spaceY) == (position-1))
 
 	{
 
@@ -215,7 +211,7 @@ function checkMove(position) // returns true whenever a piece can be moved into 
 
 
 
-	if (right(spaceX, spaceY) == (position-1))
+	if (moveRight(spaceX, spaceY) == (position-1))
 
 	{
 
@@ -226,83 +222,76 @@ function checkMove(position) // returns true whenever a piece can be moved into 
 }
 
 
-function Notify() //notifies the user 
+function DisplayWinner() 
 
 {
 
-	notify --; //decrements the value of 
+	winnerCounter --; 
 
-	if (notify == 0) //if the value reaches the end then
-
-	{
-
-		var body = document.getElementsByTagName('body'); //retrieves body element in html
-
-		body[0].style.backgroundImage= "none"; //reverts to original page background
-
-		alert('Winner! ... Shuffle and Play Again'); //tells the user that they have won the game 
-
-		var para=document.getElementsByClassName('explanation');
-	    para[0].style.visibility="visible"; //reverts visiblity to its original state
-
-		return;
-
-	}
-
-	else  (notify % 2) 
+	if (winnerCounter== 0) 
 
 	{
 
 		var body = document.getElementsByTagName('body'); 
 
-	    body[0].style.backgroundImage= "url('http://assets.pokemon.com/assets/cms2/img/video-games/video-games/pokemon_go/boxart.jpg')";
-	    //sets background pic to show user that they had completed the puzzle
-		
+		body[0].style.backgroundImage= "none"; 
+
+		alert('You won!'); 
+
+		return;
+
 	}
 
-    timer= setTimeout(Notify, 200); //notifies the user for 2 secs
+	else  (winnerCounter % 2) 
+
+	{
+
+		var body = document.getElementsByTagName('body'); 
+
+	    body[0].style.backgroundImage= "url('luigi_mansion.jpg')";
+	 
+		
+	}
+timeKeeper= setTimeout(DisplayWinner, 200);
 }
 
 
 
-function win() //notifies user that they have won
+function Won() 
 
 {
 
 	var body = document.getElementsByTagName('body');
 
+	winnerCounter = 10; 
 	
-	body[0].style.backgroundImage= "url('http://assets.pokemon.com/assets/cms2/img/video-games/video-games/pokemon_go/boxart.jpg')";
+	body[0].style.backgroundImage= "url('luigi_mansion.jpg')";
 
-	notify = 10; //initializes notify variable
 
-	timer= setTimeout(Notify, 200);
-
-	var para=document.getElementsByClassName('explanation');
-	para[0].style.visibility="hidden"; //hides text when user is being notified
+	timeKeeper= setTimeout(DisplayWinner, 200);
 
 }
 
 
-function finish() //checks when the game reaches its end
+function finish() 
 
 {
 
-	var flag = true;
+	var gameEnded = true;
 
-	for (var i = 0; i < gamePiece.length; i++) //for each puzzle piece 
+	for (var i = 0; i < puzzlePiece.length; i++) 
 	{
 
-		var top = parseInt(gamePiece[i].style.top);
+		var top = parseInt(puzzlePiece[i].style.top);
 
-		var left = parseInt(gamePiece[i].style.left);
+		var left = parseInt(puzzlePiece[i].style.left);
 
 
-		if (left != (i%4*100) || top != parseInt(i/4)*100) //checks if each piece matches its left and top position
+		if (left != (i%4*100) || top != parseInt(i/4)*100) 
 
 		{
 
-			flag = false;
+			gameEnded = false;
 
 			break;
 
@@ -310,13 +299,13 @@ function finish() //checks when the game reaches its end
 
 	}
 
-	return flag;
+	return gameEnded;
 
 }
 
 
 
-function left(x, y) //calculates how far to the left a puzzlepiece should position
+function moveLeft(x, y) 
 
 {
 
@@ -330,11 +319,11 @@ function left(x, y) //calculates how far to the left a puzzlepiece should positi
 
 	{
 
-		for (var i = 0; i < gamePiece.length; i++) 
+		for (var i = 0; i < puzzlePiece.length; i++) 
 
 		{
 
-			if (parseInt(gamePiece[i].style.left) + 100 == cordX && parseInt(gamePiece[i].style.top) == cordY)
+			if (parseInt(puzzlePiece[i].style.left) + 100 == cordX && parseInt(puzzlePiece[i].style.top) == cordY)
 
 			{
 
@@ -358,7 +347,7 @@ function left(x, y) //calculates how far to the left a puzzlepiece should positi
 
 
 
-function right (x, y) //calculates how far to the right a puzzlepiece should position
+function moveRight (x, y) 
 {
 
 	var cordX = parseInt(x);
@@ -369,9 +358,9 @@ function right (x, y) //calculates how far to the right a puzzlepiece should pos
 
 	{
 
-		for (var i =0; i<gamePiece.length; i++){
+		for (var i =0; i<puzzlePiece.length; i++){
 
-			if (parseInt(gamePiece[i].style.left) - 100 == cordX && parseInt(gamePiece[i].style.top) == cordY) 
+			if (parseInt(puzzlePiece[i].style.left) - 100 == cordX && parseInt(puzzlePiece[i].style.top) == cordY) 
 
 			{
 
@@ -395,7 +384,7 @@ function right (x, y) //calculates how far to the right a puzzlepiece should pos
 
 
 
-function up(x, y) //calculates how far up a puzzlepiece should position
+function moveUp(x, y) 
 {
 
 	var cordX = parseInt(x);
@@ -406,11 +395,11 @@ function up(x, y) //calculates how far up a puzzlepiece should position
 
 	{
 
-		for (var i=0; i<gamePiece.length; i++)
+		for (var i=0; i<puzzlePiece.length; i++)
 
 		{
 
-			if (parseInt(gamePiece[i].style.top) + 100 == cordY && parseInt(gamePiece[i].style.left) == cordX) 
+			if (parseInt(puzzlePiece[i].style.top) + 100 == cordY && parseInt(puzzlePiece[i].style.left) == cordX) 
 
 			{
 
@@ -434,7 +423,7 @@ function up(x, y) //calculates how far up a puzzlepiece should position
 
 
 
-function down (x, y) //calculates how far down a puzzlepiece should position
+function moveDown (x, y) 
 
 {
 
@@ -446,11 +435,11 @@ function down (x, y) //calculates how far down a puzzlepiece should position
 
 	{
 
-		for (var i=0; i<gamePiece.length; i++)
+		for (var i=0; i<puzzlePiece.length; i++)
 
 		{
 
-			if (parseInt(gamePiece[i].style.top) - 100 == cordY && parseInt(gamePiece[i].style.left) == cordX) 
+			if (parseInt(puzzlePiece[i].style.top) - 100 == cordY && parseInt(puzzlePiece[i].style.left) == cordX) 
 
 			{
 
@@ -474,18 +463,18 @@ function down (x, y) //calculates how far down a puzzlepiece should position
 
 
 
-function swap (position) //moves the puzzle piece by switching position with an empty space
+function changePlaces (position) 
 {
 
-	var temp = gamePiece[position].style.top;
+	var temp = puzzlePiece[position].style.top;
 
-	gamePiece[position].style.top = spaceY;
+	puzzlePiece[position].style.top = spaceY;
 
 	spaceY = temp;
 
-	temp = gamePiece[position].style.left;
+	temp = puzzlePiece[position].style.left;
 
-	gamePiece[position].style.left = spaceX;
+	puzzlePiece[position].style.left = spaceX;
 
 	spaceX = temp;
 
