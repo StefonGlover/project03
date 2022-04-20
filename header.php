@@ -18,7 +18,7 @@
             <li><a href="https://codd.cs.gsu.edu/~lhenry23/Web/Projects/Project3/Project3puzzleNew_2020_tt.pdf">About</a></li>
             <li><a href="https://github.com/StefonGlover/project03">GitHub</a></li>
             <li><a href="home.html">Group</a></li>
-            <li><a href="#">Video</a></li>
+            <li><a href="https://www.youtube.com/watch?v=le41kk9Iwnk">Video</a></li>
             <li>
             </li>
         </ul>
