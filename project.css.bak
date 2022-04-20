@@ -93,7 +93,7 @@ h1 {
 
 .puzzlepiece {
     background-color: teal;
-	opacity:0.9;
+	opacity:0.1;
 	border: 2px solid green;
 	height: 96px;
     width: 96px;

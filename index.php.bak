@@ -28,6 +28,10 @@
             </div>
 			
 			
+			<div id="">
+                <button id="shuffleBtn" class="button">Cheat</button>
+            </div>
+			
 			
 			
         </div>
